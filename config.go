@@ -1,4 +1,4 @@
-package fuzzmath
+package fuzzdecimal
 
 import (
 	"testing"

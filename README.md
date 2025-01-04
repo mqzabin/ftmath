@@ -1,13 +1,13 @@
-# fuzzmath
+# fuzzdecimal
 
-This package provides an easy way to perform arbitrary precision math-related fuzzy tests.
+This package provides an easy way to perform fuzzy tests with arbitrary precision decimals.
 
 ## Usage
 
 Install as dependency into your project:
 
 ```bash
-$ go get github.com/mqzabin/fuzzmath
+$ go get github.com/mqzabin/fuzzdecimal
 ```
 
 Example code:
@@ -19,11 +19,11 @@ import (
 	"testing"
 	
 	"github.com/shopspring/decimal"
-	"github.com/mqzabin/fuzzmath"
+	"github.com/mqzabin/fuzzdecimal"
 )
 
 func FuzzOperations(f *testing.F) {
-    fuzzer := fuzzmath.NewFuzzer(f, fuzzmath.WithSignedMaxDigits(30))
+    fuzzer := fuzzdecimal.NewFuzzer(f, fuzzdecimal.WithSignedMaxDigits(30))
 	
     fuzzer.Fuzz2(func(t *testing.T, x1, x2 string) {
 		a, err := decimal.NewFromString(x1)

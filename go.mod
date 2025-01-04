@@ -1,3 +1,3 @@
-module github.com/mqzabin/fuzzmath
+module github.com/mqzabin/fuzzdecimal
 
 go 1.23.2
