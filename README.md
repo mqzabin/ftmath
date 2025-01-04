@@ -20,6 +20,8 @@ All of them have the same methods in the `FuzzN()` name format, where `N` is the
 
 You can define the maximum number of digits for the fuzzed decimals, and if they can be signed (positive/negative) or unsigned via options.
 
+This package will work for any type of decimal that could be parsed from a string.
+
 ## Usage
 
 Install as dependency into your project:
