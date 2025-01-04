@@ -1,4 +1,4 @@
-package ftmath
+package fuzzmath
 
 import (
 	"testing"
@@ -19,8 +19,9 @@ func parseConfig(f *testing.F, options []Option) config {
 	f.Helper()
 
 	cfg := config{
-		maxDigits: defaultMaxDigits,
-		signed:    defaultSigned,
+		maxDigits:      defaultMaxDigits,
+		uintsPerNumber: defaultMaxDigits / uintSafeDigits,
+		signed:         defaultSigned,
 	}
 
 	for _, opt := range options {

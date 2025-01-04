@@ -1,4 +1,4 @@
-package ftmath
+package fuzzmath
 
 import (
 	"strings"
@@ -30,16 +30,16 @@ func (s seed) String(maxDigits int) string {
 	return sb.String()
 }
 
-func seedToStringAdapter[N any](f *testing.F, maxDigits int, parseFunc func(t *testing.T, s string) N, handler func(t *testing.T, numbers []N)) func(t *testing.T, seeds []seed) {
+func seedToStringAdapter(f *testing.F, maxDigits int, handler func(t *testing.T, numbers []string)) func(t *testing.T, seeds []seed) {
 	f.Helper()
 
 	return func(t *testing.T, seeds []seed) {
 		f.Helper()
 		t.Helper()
 
-		parsedNumbers := make([]N, 0, len(seeds))
+		parsedNumbers := make([]string, 0, len(seeds))
 		for _, s := range seeds {
-			parsedNumbers = append(parsedNumbers, parseFunc(t, s.String(maxDigits)))
+			parsedNumbers = append(parsedNumbers, s.String(maxDigits))
 		}
 
 		handler(t, parsedNumbers)

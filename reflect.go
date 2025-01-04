@@ -1,4 +1,4 @@
-package ftmath
+package fuzzmath
 
 import (
 	"reflect"
