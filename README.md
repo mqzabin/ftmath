@@ -1,4 +1,4 @@
-# fuzzdecimal
+# fuzzdecimal - Fuzzy tests for arbitrary precision decimals
 
 Go 1.18 introduced [fuzzy testing](https://go.dev/doc/security/fuzz/), a way to test your code with "random" inputs. This is a great way to find bugs in your code.
 
