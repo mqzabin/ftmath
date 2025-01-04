@@ -23,6 +23,8 @@ Then the used will vary according to the fuzzer you choose.
 
 ### StringFuzzer
 
+This fuzzer is more flexible, but you have to parse each decimal string into your desired decimal type.
+
 ```go
 package test
 
@@ -34,19 +36,23 @@ import (
 )
 
 func FuzzAdd(f *testing.F) {
+	// Creating the fuzzer.
 	fuzzer := fuzzdecimal.NewStringFuzzer(f, fuzzdecimal.WithSignedMaxDigits(30))
 	
 	fuzzer.Fuzz2(func(t *testing.T, x1, x2 string) {
+		// Parsing the first string.
 		a, err := decimal.NewFromString(x1)
 		if err != nil {
 			t.Errorf("failed to parse x1: %v", err)
 		}
 
+		// Parsing the second string.
 		b, err := decimal.NewFromString(x1)
 		if err != nil {
 			t.Errorf("failed to parse x1: %v", err)
 		}
         
+		// Making the comparison.
 		if resAB, resBA := a.Add(b), b.Add(a); !resAB.Equal(resBA) {
 			t.Errorf("a + b != b + a, where a='%s', b='%s', a+b='%s' and b+a='%s'", a.String(), b.String(), resAB.String(), resBA.String())
 		}
@@ -56,6 +62,8 @@ func FuzzAdd(f *testing.F) {
 
 ### GenericFuzzer
 
+This fuzzer is easier than `StringFuzzer`, you only have to implement the desired comparisons. 
+
 ```go
 package test
 
@@ -67,14 +75,17 @@ import (
 )
 
 func FuzzAdd(f *testing.F) {
+	// Defining how to create the decimal from a numeric string.
 	parseFunc := func(f *testing.F, s string) (decimal.Decimal, error) {
 		f.Helper()
 		
-        return decimal.NewFromString(s)
-    }
+		return decimal.NewFromString(s)
+	}
 	
+	// Creating the fuzzer.
 	fuzzer := fuzzdecimal.NewGenericFuzzer(f, parseFunc, fuzzdecimal.WithSignedMaxDigits(30))
 	
+	// FuzzN will receive N decimals from the parseFunc chosen type. 
 	fuzzer.Fuzz2(func(t *testing.T, x1, x2 decimal.Decimal) {
 		if res12, res21 := x1.Add(x2), x2.Add(x1); !res12.Equal(res21) {
 			t.Errorf("x1 + x2 != x2 + x1, where x1='%s', x2='%s', x1+x2='%s' and x2+x1='%s'", x1.String(), x2.String(), res12.String(), res21.String())
