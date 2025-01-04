@@ -87,8 +87,8 @@ import (
 
 func FuzzAdd(f *testing.F) {
 	// Defining how to create the decimal from a numeric string.
-	parseFunc := func(f *testing.F, s string) (decimal.Decimal, error) {
-		f.Helper()
+	parseFunc := func(t *testing.T, s string) (decimal.Decimal, error) {
+		t.Helper()
 		
 		return decimal.NewFromString(s)
 	}

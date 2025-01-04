@@ -17,8 +17,6 @@ func createSeedFunc(f *testing.F, signed bool, numbersCount, uintsPerNumber int,
 	signature := seedFuncSignature(f, signed, numbersCount, uintsPerNumber)
 
 	return reflect.MakeFunc(signature, func(args []reflect.Value) []reflect.Value {
-		f.Helper()
-
 		testingT, ok := args[0].Interface().(*testing.T)
 		if !ok {
 			f.Errorf("first argument must be *testing.T")

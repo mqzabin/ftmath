@@ -5,11 +5,8 @@ import (
 	"testing"
 )
 
-func seedToStringAdapter(f *testing.F, maxDigits int, handler func(t *testing.T, strNumbers []string)) func(t *testing.T, seeds []Seed) {
-	f.Helper()
-
+func seedToStringAdapter(maxDigits int, handler func(t *testing.T, strNumbers []string)) func(t *testing.T, seeds []Seed) {
 	return func(t *testing.T, seeds []Seed) {
-		f.Helper()
 		t.Helper()
 
 		parsedNumbers := make([]string, 0, len(seeds))
@@ -21,12 +18,12 @@ func seedToStringAdapter(f *testing.F, maxDigits int, handler func(t *testing.T,
 	}
 }
 
-func parseStringSlice[N any](f *testing.F, strNumbers []string, parseNumberFunc func(f *testing.F, s string) (N, error)) ([]N, error) {
-	f.Helper()
+func parseStringSlice[N any](t *testing.T, strNumbers []string, parseNumberFunc func(t *testing.T, s string) (N, error)) ([]N, error) {
+	t.Helper()
 
 	parsedNumbers := make([]N, 0, len(strNumbers))
 	for index, strNumber := range strNumbers {
-		parsedNumber, err := parseNumberFunc(f, strNumber)
+		parsedNumber, err := parseNumberFunc(t, strNumber)
 		if err != nil {
 			return nil, fmt.Errorf("failed to parse number string '%s' at index %d: %v", strNumber, index, err)
 		}
