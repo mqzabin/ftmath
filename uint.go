@@ -14,19 +14,6 @@ const (
 	base = 10
 )
 
-var digitMap = map[uint64]string{
-	0: "0",
-	1: "1",
-	2: "2",
-	3: "3",
-	4: "4",
-	5: "5",
-	6: "6",
-	7: "7",
-	8: "8",
-	9: "9",
-}
-
 func uintToString(sb *strings.Builder, n uint64) {
 	var digitRune rune
 
@@ -66,4 +53,8 @@ func uintToString(sb *strings.Builder, n uint64) {
 		sbLen++
 		n /= base
 	}
+}
+
+func UintsPerNumber(maxDigits int) int {
+	return maxDigits / uintSafeDigits
 }

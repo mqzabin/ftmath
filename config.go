@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	defaultMaxDigits = uintSafeDigits
+	defaultMaxDigits = 10
 	defaultSigned    = true
 )
 
@@ -20,7 +20,7 @@ func parseConfig(f *testing.F, options []Option) config {
 
 	cfg := config{
 		maxDigits:      defaultMaxDigits,
-		uintsPerNumber: defaultMaxDigits / uintSafeDigits,
+		uintsPerNumber: UintsPerNumber(defaultMaxDigits),
 		signed:         defaultSigned,
 	}
 
@@ -39,8 +39,7 @@ func WithUnsignedMaxDigits(maxDigits int) Option {
 
 		cfg.signed = false
 		cfg.maxDigits = maxDigits
-		cfg.uintsPerNumber = maxDigits / uintSafeDigits
-
+		cfg.uintsPerNumber = UintsPerNumber(maxDigits)
 	}
 }
 
@@ -50,6 +49,6 @@ func WithSignedMaxDigits(maxDigits int) Option {
 
 		cfg.signed = true
 		cfg.maxDigits = maxDigits
-		cfg.uintsPerNumber = maxDigits / uintSafeDigits
+		cfg.uintsPerNumber = UintsPerNumber(maxDigits)
 	}
 }

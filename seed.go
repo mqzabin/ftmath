@@ -2,15 +2,14 @@ package fuzzdecimal
 
 import (
 	"strings"
-	"testing"
 )
 
-type seed struct {
+type Seed struct {
 	uints []uint64
 	neg   bool
 }
 
-func (s seed) String(maxDigits int) string {
+func (s Seed) String(maxDigits int) string {
 	strLen := maxDigits
 	if s.neg {
 		strLen++
@@ -28,20 +27,4 @@ func (s seed) String(maxDigits int) string {
 	}
 
 	return sb.String()
-}
-
-func seedToStringAdapter(f *testing.F, maxDigits int, handler func(t *testing.T, numbers []string)) func(t *testing.T, seeds []seed) {
-	f.Helper()
-
-	return func(t *testing.T, seeds []seed) {
-		f.Helper()
-		t.Helper()
-
-		parsedNumbers := make([]string, 0, len(seeds))
-		for _, s := range seeds {
-			parsedNumbers = append(parsedNumbers, s.String(maxDigits))
-		}
-
-		handler(t, parsedNumbers)
-	}
 }

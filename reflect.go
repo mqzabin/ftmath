@@ -11,32 +11,10 @@ var (
 	rtTestingT = reflect.TypeOf(&testing.T{})
 )
 
-func createFuncSignature(f *testing.F, signed bool, numbersCount, uintsPerNumber int) reflect.Type {
+func createSeedFunc(f *testing.F, signed bool, numbersCount, uintsPerNumber int, seedHandler func(*testing.T, []Seed)) reflect.Value {
 	f.Helper()
 
-	paramsLen := 1 + numbersCount*uintsPerNumber
-	if signed {
-		paramsLen += numbersCount
-	}
-
-	params := make([]reflect.Type, 0, paramsLen)
-	params = append(params, rtTestingT)
-
-	for range numbersCount {
-		if signed {
-			params = append(params, rtBool)
-		}
-
-		for range uintsPerNumber {
-			params = append(params, rtUint)
-		}
-	}
-
-	return reflect.FuncOf(params, []reflect.Type{}, false)
-}
-
-func createSeedFunc(f *testing.F, signed bool, numbersCount, uintsPerNumber int, signature reflect.Type, seedFunc func(*testing.T, []seed)) reflect.Value {
-	f.Helper()
+	signature := seedFuncSignature(f, signed, numbersCount, uintsPerNumber)
 
 	return reflect.MakeFunc(signature, func(args []reflect.Value) []reflect.Value {
 		f.Helper()
@@ -46,7 +24,7 @@ func createSeedFunc(f *testing.F, signed bool, numbersCount, uintsPerNumber int,
 			f.Errorf("first argument must be *testing.T")
 		}
 
-		seeds := make([]seed, 0, uintsPerNumber)
+		seeds := make([]Seed, 0, uintsPerNumber)
 
 		argIndex := 1 // Skipping zero, since *testing.T is the first argument.
 		for range numbersCount {
@@ -74,12 +52,36 @@ func createSeedFunc(f *testing.F, signed bool, numbersCount, uintsPerNumber int,
 				argIndex++
 			}
 
-			seeds = append(seeds, seed{uints: uints, neg: neg})
+			seeds = append(seeds, Seed{uints: uints, neg: neg})
 		}
 
 		// Calling the seed function to transform seed into the desired type.
-		seedFunc(testingT, seeds)
+		seedHandler(testingT, seeds)
 
 		return nil
 	})
+}
+
+func seedFuncSignature(f *testing.F, signed bool, numbersCount, uintsPerNumber int) reflect.Type {
+	f.Helper()
+
+	paramsLen := 1 + numbersCount*uintsPerNumber
+	if signed {
+		paramsLen += numbersCount
+	}
+
+	params := make([]reflect.Type, 0, paramsLen)
+	params = append(params, rtTestingT)
+
+	for range numbersCount {
+		if signed {
+			params = append(params, rtBool)
+		}
+
+		for range uintsPerNumber {
+			params = append(params, rtUint)
+		}
+	}
+
+	return reflect.FuncOf(params, []reflect.Type{}, false)
 }
