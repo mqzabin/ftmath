@@ -1,9 +1,15 @@
 # fuzzdecimal
 
-Go 1.18 introduced [fuzzy testing](https://go.dev/doc/security/fuzz/), a way to test your code with random inputs. This is a great way to find bugs in your code. 
-However, the fuzzy API has a limitation: it only works with primitive and relatively static types. 
+Go 1.18 introduced [fuzzy testing](https://go.dev/doc/security/fuzz/), a way to test your code with "random" inputs. This is a great way to find bugs in your code.
 
-So, this package provides an easy way to perform fuzzy tests with arbitrary precision decimals.
+Writing tests for math-related packages is pretty hard, since there are infinite possible inputs.
+In this sense, fuzzy testing could be very nice to ensure that your code edge cases are covered.
+
+The fuzzy test API only supports primitive and relatively static types. So, if your math-related package uses primitive types, you could use the fuzzy API directly.
+
+However, if your package uses arbitrary precision decimals, you will have to write a lot of glue code to convert the primitive type inputs into your desired decimal type.
+
+To solve this problem, this package provides an easy way to perform fuzzy tests with arbitrary precision decimals.
 
 The `fuzzdecimal` package provides three diferrent "fuzzers":
 - `StringFuzzer`: More flexible. Your test will receive N decimal strings and your test function have to parse them into your desired decimal type, and make comparisons.
