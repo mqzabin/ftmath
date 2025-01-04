@@ -4,10 +4,10 @@ import (
 	"fmt"
 )
 
-func errorMessageFromValues(values []string) string {
-	errorMessage := "\n"
+func errorMessageFromValues(prefix string, values []string) string {
+	var errorMessage string
 	for index, value := range values {
-		errorMessage += fmt.Sprintf("index %d value: '%s'\n", index, value)
+		errorMessage += fmt.Sprintf("%sindex %d value: '%s'\n", prefix, index, value)
 	}
 
 	return errorMessage

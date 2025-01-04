@@ -31,8 +31,8 @@ func NewGenericComparisonFuzzer[Number, Reference any](
 
 func (ft *GenericComparisonFuzzer[Number, Reference]) fuzzN(
 	numbersCount int,
-	refResultFunc func(f *testing.F, numbers []Reference) (Reference, error),
-	fuzzFunc func(t *testing.T, refResult Reference, numbers []Number),
+	refResultFunc func(f *testing.F, numbers []Reference) (string, error),
+	fuzzFunc func(t *testing.T, numbers []Number) string,
 ) {
 	ft.f.Helper()
 
@@ -45,9 +45,9 @@ func (ft *GenericComparisonFuzzer[Number, Reference]) fuzzN(
 			t.Errorf("failed to parse reference numbers: %v", err)
 		}
 
-		referenceResult, err := refResultFunc(ft.f, referenceNumbers)
+		referenceResultStr, err := refResultFunc(ft.f, referenceNumbers)
 		if err != nil {
-			t.Errorf("failed to get reference result: %v: values: %s", err, errorMessageFromValues(strNumbers))
+			t.Errorf("failed to get reference result: %v: values:\n%s", err, errorMessageFromValues("\t", strNumbers))
 		}
 
 		numbers, err := parseStringSlice(ft.f, strNumbers, ft.parseNumberFunc)
@@ -55,7 +55,11 @@ func (ft *GenericComparisonFuzzer[Number, Reference]) fuzzN(
 			t.Errorf("failed to parse numbers: %v", err)
 		}
 
-		fuzzFunc(t, referenceResult, numbers)
+		resultStr := fuzzFunc(t, numbers)
+
+		if resultStr != referenceResultStr {
+			t.Errorf("unexpected result:\n\tgot: \n\t\t%s\n\twant: \n\t\t%s\n\tvalues:\n%s", resultStr, referenceResultStr, errorMessageFromValues("\t\t", strNumbers))
+		}
 	})
 
 	rvFunc := createSeedFunc(ft.f, ft.cfg.signed, numbersCount, ft.cfg.uintsPerNumber, seedHandlerFunc)
@@ -64,204 +68,204 @@ func (ft *GenericComparisonFuzzer[Number, Reference]) fuzzN(
 }
 
 func (ft *GenericComparisonFuzzer[Number, Reference]) Fuzz1(
-	refResultFunc func(f *testing.F, x1 Reference) (Reference, error),
-	testFunc func(t *testing.T, refResult Reference, x1 Number),
+	refResultFunc func(f *testing.F, x1 Reference) (string, error),
+	testFunc func(t *testing.T, x1 Number) string,
 ) {
 	ft.f.Helper()
 
 	ft.fuzzN(1,
-		func(f *testing.F, numbers []Reference) (Reference, error) {
+		func(f *testing.F, numbers []Reference) (string, error) {
 			f.Helper()
 
 			return refResultFunc(f, numbers[0])
 		},
-		func(t *testing.T, refResult Reference, numbers []Number) {
+		func(t *testing.T, numbers []Number) string {
 			ft.f.Helper()
 
-			testFunc(t, refResult, numbers[0])
+			return testFunc(t, numbers[0])
 		},
 	)
 }
 
 func (ft *GenericComparisonFuzzer[Number, Reference]) Fuzz2(
-	refResultFunc func(f *testing.F, x1, x2 Reference) (Reference, error),
-	testFunc func(t *testing.T, refResult Reference, x1, x2 Number),
+	refResultFunc func(f *testing.F, x1, x2 Reference) (string, error),
+	testFunc func(t *testing.T, x1, x2 Number) string,
 ) {
 	ft.f.Helper()
 
 	ft.fuzzN(2,
-		func(f *testing.F, numbers []Reference) (Reference, error) {
+		func(f *testing.F, numbers []Reference) (string, error) {
 			f.Helper()
 
 			return refResultFunc(f, numbers[0], numbers[1])
 		},
-		func(t *testing.T, refResult Reference, numbers []Number) {
+		func(t *testing.T, numbers []Number) string {
 			ft.f.Helper()
 
-			testFunc(t, refResult, numbers[0], numbers[1])
+			return testFunc(t, numbers[0], numbers[1])
 		},
 	)
 }
 
 func (ft *GenericComparisonFuzzer[Number, Reference]) Fuzz3(
-	refResultFunc func(f *testing.F, x1, x2, x3 Reference) (Reference, error),
-	testFunc func(t *testing.T, refResult Reference, x1, x2, x3 Number),
+	refResultFunc func(f *testing.F, x1, x2, x3 Reference) (string, error),
+	testFunc func(t *testing.T, x1, x2, x3 Number) string,
 ) {
 	ft.f.Helper()
 
 	ft.fuzzN(3,
-		func(f *testing.F, numbers []Reference) (Reference, error) {
+		func(f *testing.F, numbers []Reference) (string, error) {
 			f.Helper()
 
 			return refResultFunc(f, numbers[0], numbers[1], numbers[2])
 		},
-		func(t *testing.T, refResult Reference, numbers []Number) {
+		func(t *testing.T, numbers []Number) string {
 			ft.f.Helper()
 
-			testFunc(t, refResult, numbers[0], numbers[1], numbers[2])
+			return testFunc(t, numbers[0], numbers[1], numbers[2])
 		},
 	)
 
 }
 
 func (ft *GenericComparisonFuzzer[Number, Reference]) Fuzz4(
-	refResultFunc func(f *testing.F, x1, x2, x3, x4 Reference) (Reference, error),
-	testFunc func(t *testing.T, refResult Reference, x1, x2, x3, x4 Number),
+	refResultFunc func(f *testing.F, x1, x2, x3, x4 Reference) (string, error),
+	testFunc func(t *testing.T, x1, x2, x3, x4 Number) string,
 ) {
 	ft.f.Helper()
 
 	ft.fuzzN(4,
-		func(f *testing.F, numbers []Reference) (Reference, error) {
+		func(f *testing.F, numbers []Reference) (string, error) {
 			f.Helper()
 
 			return refResultFunc(f, numbers[0], numbers[1], numbers[2], numbers[3])
 		},
-		func(t *testing.T, refResult Reference, numbers []Number) {
+		func(t *testing.T, numbers []Number) string {
 			ft.f.Helper()
 
-			testFunc(t, refResult, numbers[0], numbers[1], numbers[2], numbers[3])
+			return testFunc(t, numbers[0], numbers[1], numbers[2], numbers[3])
 		},
 	)
 
 }
 
 func (ft *GenericComparisonFuzzer[Number, Reference]) Fuzz5(
-	refResultFunc func(f *testing.F, x1, x2, x3, x4, x5 Reference) (Reference, error),
-	testFunc func(t *testing.T, refResult Reference, x1, x2, x3, x4, x5 Number),
+	refResultFunc func(f *testing.F, x1, x2, x3, x4, x5 Reference) (string, error),
+	testFunc func(t *testing.T, x1, x2, x3, x4, x5 Number) string,
 ) {
 	ft.f.Helper()
 
 	ft.fuzzN(5,
-		func(f *testing.F, numbers []Reference) (Reference, error) {
+		func(f *testing.F, numbers []Reference) (string, error) {
 			f.Helper()
 
 			return refResultFunc(f, numbers[0], numbers[1], numbers[2], numbers[3], numbers[4])
 		},
-		func(t *testing.T, refResult Reference, numbers []Number) {
+		func(t *testing.T, numbers []Number) string {
 			ft.f.Helper()
 
-			testFunc(t, refResult, numbers[0], numbers[1], numbers[2], numbers[3], numbers[4])
+			return testFunc(t, numbers[0], numbers[1], numbers[2], numbers[3], numbers[4])
 		},
 	)
 
 }
 
 func (ft *GenericComparisonFuzzer[Number, Reference]) Fuzz6(
-	refResultFunc func(f *testing.F, x1, x2, x3, x4, x5, x6 Reference) (Reference, error),
-	testFunc func(t *testing.T, refResult Reference, x1, x2, x3, x4, x5, x6 Number),
+	refResultFunc func(f *testing.F, x1, x2, x3, x4, x5, x6 Reference) (string, error),
+	testFunc func(t *testing.T, x1, x2, x3, x4, x5, x6 Number) string,
 ) {
 	ft.f.Helper()
 
 	ft.fuzzN(6,
-		func(f *testing.F, numbers []Reference) (Reference, error) {
+		func(f *testing.F, numbers []Reference) (string, error) {
 			f.Helper()
 
 			return refResultFunc(f, numbers[0], numbers[1], numbers[2], numbers[3], numbers[4], numbers[5])
 		},
-		func(t *testing.T, refResult Reference, numbers []Number) {
+		func(t *testing.T, numbers []Number) string {
 			ft.f.Helper()
 
-			testFunc(t, refResult, numbers[0], numbers[1], numbers[2], numbers[3], numbers[4], numbers[5])
+			return testFunc(t, numbers[0], numbers[1], numbers[2], numbers[3], numbers[4], numbers[5])
 		},
 	)
 
 }
 
 func (ft *GenericComparisonFuzzer[Number, Reference]) Fuzz7(
-	refResultFunc func(f *testing.F, x1, x2, x3, x4, x5, x6, x7 Reference) (Reference, error),
-	testFunc func(t *testing.T, refResult Reference, x1, x2, x3, x4, x5, x6, x7 Number),
+	refResultFunc func(f *testing.F, x1, x2, x3, x4, x5, x6, x7 Reference) (string, error),
+	testFunc func(t *testing.T, x1, x2, x3, x4, x5, x6, x7 Number) string,
 ) {
 	ft.f.Helper()
 
 	ft.fuzzN(7,
-		func(f *testing.F, numbers []Reference) (Reference, error) {
+		func(f *testing.F, numbers []Reference) (string, error) {
 			f.Helper()
 
 			return refResultFunc(f, numbers[0], numbers[1], numbers[2], numbers[3], numbers[4], numbers[5], numbers[6])
 		},
-		func(t *testing.T, refResult Reference, numbers []Number) {
+		func(t *testing.T, numbers []Number) string {
 			ft.f.Helper()
 
-			testFunc(t, refResult, numbers[0], numbers[1], numbers[2], numbers[3], numbers[4], numbers[5], numbers[6])
+			return testFunc(t, numbers[0], numbers[1], numbers[2], numbers[3], numbers[4], numbers[5], numbers[6])
 		},
 	)
 
 }
 
 func (ft *GenericComparisonFuzzer[Number, Reference]) Fuzz8(
-	refResultFunc func(f *testing.F, x1, x2, x3, x4, x5, x6, x7, x8 Reference) (Reference, error),
-	testFunc func(t *testing.T, refResult Reference, x1, x2, x3, x4, x5, x6, x7, x8 Number),
+	refResultFunc func(f *testing.F, x1, x2, x3, x4, x5, x6, x7, x8 Reference) (string, error),
+	testFunc func(t *testing.T, x1, x2, x3, x4, x5, x6, x7, x8 Number) string,
 ) {
 	ft.f.Helper()
 
 	ft.fuzzN(8,
-		func(f *testing.F, numbers []Reference) (Reference, error) {
+		func(f *testing.F, numbers []Reference) (string, error) {
 			f.Helper()
 
 			return refResultFunc(f, numbers[0], numbers[1], numbers[2], numbers[3], numbers[4], numbers[5], numbers[6], numbers[7])
 		},
-		func(t *testing.T, refResult Reference, numbers []Number) {
+		func(t *testing.T, numbers []Number) string {
 			ft.f.Helper()
 
-			testFunc(t, refResult, numbers[0], numbers[1], numbers[2], numbers[3], numbers[4], numbers[5], numbers[6], numbers[7])
+			return testFunc(t, numbers[0], numbers[1], numbers[2], numbers[3], numbers[4], numbers[5], numbers[6], numbers[7])
 		},
 	)
 
 }
 
 func (ft *GenericComparisonFuzzer[Number, Reference]) Fuzz9(
-	refResultFunc func(f *testing.F, x1, x2, x3, x4, x5, x6, x7, x8, x9 Reference) (Reference, error),
-	testFunc func(t *testing.T, refResult Reference, x1, x2, x3, x4, x5, x6, x7, x8, x9 Number),
+	refResultFunc func(f *testing.F, x1, x2, x3, x4, x5, x6, x7, x8, x9 Reference) (string, error),
+	testFunc func(t *testing.T, x1, x2, x3, x4, x5, x6, x7, x8, x9 Number) string,
 ) {
 	ft.f.Helper()
 
 	ft.fuzzN(9,
-		func(f *testing.F, numbers []Reference) (Reference, error) {
+		func(f *testing.F, numbers []Reference) (string, error) {
 			f.Helper()
 
 			return refResultFunc(f, numbers[0], numbers[1], numbers[2], numbers[3], numbers[4], numbers[5], numbers[6], numbers[7], numbers[8])
 		},
-		func(t *testing.T, refResult Reference, numbers []Number) {
+		func(t *testing.T, numbers []Number) string {
 			ft.f.Helper()
 
-			testFunc(t, refResult, numbers[0], numbers[1], numbers[2], numbers[3], numbers[4], numbers[5], numbers[6], numbers[7], numbers[8])
+			return testFunc(t, numbers[0], numbers[1], numbers[2], numbers[3], numbers[4], numbers[5], numbers[6], numbers[7], numbers[8])
 		},
 	)
 }
 func (ft *GenericComparisonFuzzer[Number, Reference]) Fuzz10(
-	refResultFunc func(f *testing.F, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10 Reference) (Reference, error),
-	testFunc func(t *testing.T, refResult Reference, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10 Number),
+	refResultFunc func(f *testing.F, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10 Reference) (string, error),
+	testFunc func(t *testing.T, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10 Number) string,
 ) {
 	ft.fuzzN(9,
-		func(f *testing.F, numbers []Reference) (Reference, error) {
+		func(f *testing.F, numbers []Reference) (string, error) {
 			f.Helper()
 
 			return refResultFunc(f, numbers[0], numbers[1], numbers[2], numbers[3], numbers[4], numbers[5], numbers[6], numbers[7], numbers[8], numbers[9])
 		},
-		func(t *testing.T, refResult Reference, numbers []Number) {
+		func(t *testing.T, numbers []Number) string {
 			ft.f.Helper()
 
-			testFunc(t, refResult, numbers[0], numbers[1], numbers[2], numbers[3], numbers[4], numbers[5], numbers[6], numbers[7], numbers[8], numbers[9])
+			return testFunc(t, numbers[0], numbers[1], numbers[2], numbers[3], numbers[4], numbers[5], numbers[6], numbers[7], numbers[8], numbers[9])
 		},
 	)
 }
