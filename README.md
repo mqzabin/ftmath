@@ -1,15 +1,18 @@
 # fuzzdecimal
 
-This package provides an easy way to perform fuzzy tests with arbitrary precision decimals.
+Go 1.18 introduced [fuzzy testing](https://go.dev/doc/security/fuzz/), a way to test your code with random inputs. This is a great way to find bugs in your code. 
+However, the fuzzy API has a limitation: it only works with primitive and relatively static types. 
 
-The `fuzzdecimal` package provides three diferrente "fuzzers":
+So, this package provides an easy way to perform fuzzy tests with arbitrary precision decimals.
+
+The `fuzzdecimal` package provides three diferrent "fuzzers":
 - `StringFuzzer`: More flexible. Your test will receive N decimal strings and your test function have to parse them into your desired decimal type, and make comparisons.
 - `GenericFuzzer`: Easier to use. You have to provide your decimal type string parse function, and your test will receive N decimals (in your chosen decimal type), and you should only implement the comparisons.
 - `GenericComparisonFuzzer`: Is an addition to the `GenericFuzzer`. Could be used when you need to compare your decimal type with another reference decimal type operation result. You have to provide a function to parse yours, and the reference decimal type from a string. Then, the `FuzzN` method will receive a reference result function that should return the operation result, and your test function will receive the reference result as a parameter. 
 
-All of them have the same methods in the `FuzzN()` name format, where N is the number of decimal arguments that your tested function needs, e.g. `Fuzz1` for unary operations, `Fuzz2` for binary operations, and so on.
+All of them have the same methods in the `FuzzN()` name format, where `N` is the number of decimal arguments that your test function needs, e.g. `Fuzz1` for unary operations, `Fuzz2` for binary operations, and so on.
 
-You can define via options, the maximum number of digits for the fuzzed decimals, and if they can be signed (positive/negative) or unsigned.
+You can define the maximum number of digits for the fuzzed decimals, and if they can be signed (positive/negative) or unsigned via options.
 
 ## Usage
 
