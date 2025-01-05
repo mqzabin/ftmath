@@ -4,51 +4,67 @@ import (
 	"testing"
 )
 
-const (
-	defaultMaxDigits = 10
-	defaultSigned    = true
-)
-
 type config struct {
-	maxDigits      int
-	uintsPerNumber int
-	signed         bool
+	decimals []decimalConfig
 }
 
-func parseConfig(f *testing.F, options []Option) config {
+func parseFuzzerConfig(f *testing.F, decimalsCount int, options []Option) config {
 	f.Helper()
 
 	cfg := config{
-		maxDigits:      defaultMaxDigits,
-		uintsPerNumber: UintsPerNumber(defaultMaxDigits),
-		signed:         defaultSigned,
+		decimals: make([]decimalConfig, 0, decimalsCount),
+	}
+
+	// Initializing number configs.
+	for range decimalsCount {
+		cfg.decimals = append(cfg.decimals, newDefaultDecimalConfig(f))
 	}
 
 	for _, opt := range options {
 		opt(f, &cfg)
 	}
 
+	for _, decCfg := range cfg.decimals {
+		decCfg.postOptionValidation(f)
+	}
+
 	return cfg
+}
+
+func (cfg config) applyDecimalOption(f *testing.F, numberIndex int, options []DecimalOption) {
+	f.Helper()
+
+	if numberIndex <= 0 {
+		f.Errorf("decimals are 1-indexed, received %d index value", numberIndex)
+	}
+
+	sliceIndex := numberIndex - 1
+
+	if sliceIndex > len(cfg.decimals) {
+		f.Errorf("decimals count is %d, received %d index value", len(cfg.decimals), numberIndex)
+	}
+
+	for _, opt := range options {
+		opt(f, &cfg.decimals[sliceIndex])
+	}
 }
 
 type Option func(f *testing.F, cfg *config)
 
-func WithUnsignedMaxDigits(maxDigits int) Option {
+func WithAllDecimals(options ...DecimalOption) Option {
 	return func(f *testing.F, cfg *config) {
 		f.Helper()
 
-		cfg.signed = false
-		cfg.maxDigits = maxDigits
-		cfg.uintsPerNumber = UintsPerNumber(maxDigits)
+		for i := range len(cfg.decimals) {
+			cfg.applyDecimalOption(f, i+1, options)
+		}
 	}
 }
 
-func WithSignedMaxDigits(maxDigits int) Option {
+func WithDecimal(index int, options ...DecimalOption) Option {
 	return func(f *testing.F, cfg *config) {
 		f.Helper()
 
-		cfg.signed = true
-		cfg.maxDigits = maxDigits
-		cfg.uintsPerNumber = UintsPerNumber(maxDigits)
+		cfg.applyDecimalOption(f, index, options)
 	}
 }

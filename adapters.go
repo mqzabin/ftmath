@@ -5,20 +5,22 @@ import (
 	"testing"
 )
 
-func seedToStringAdapter(maxDigits int, handler func(t *testing.T, strNumbers []string)) func(t *testing.T, seeds []Seed) {
-	return func(t *testing.T, seeds []Seed) {
+func seedToStringFunc(f *testing.F, cfg config, handler func(t *testing.T, strNumbers []string)) func(t *testing.T, seeds []seed) {
+	f.Helper()
+
+	return func(t *testing.T, seeds []seed) {
 		t.Helper()
 
 		parsedNumbers := make([]string, 0, len(seeds))
-		for _, s := range seeds {
-			parsedNumbers = append(parsedNumbers, s.String(maxDigits))
+		for i, s := range seeds {
+			parsedNumbers = append(parsedNumbers, s.string(cfg.decimals[i]))
 		}
 
 		handler(t, parsedNumbers)
 	}
 }
 
-func parseStringSlice[N any](t *testing.T, strNumbers []string, parseNumberFunc func(t *testing.T, s string) (N, error)) ([]N, error) {
+func parseStringSlice[N any](t *T, strNumbers []string, parseNumberFunc func(t *T, s string) (N, error)) ([]N, error) {
 	t.Helper()
 
 	parsedNumbers := make([]N, 0, len(strNumbers))

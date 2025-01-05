@@ -1,60 +1,77 @@
 package fuzzdecimal
 
-import (
-	"strings"
-)
-
 const (
-	// uintSafeDigits is the number of digits that can be safely represented by an uint64.
+	// maxDigitsPerUint is the number of digits that can be safely represented by an uint64.
 	// 18446744073709551615 is the maximum value that can be represented by an uint64,
 	// and the max number that could be completely represented by it, is:
 	// 9999999999999999999, which has 19 digits.
-	uintSafeDigits = 19
+	maxDigitsPerUint = 19
+
+	maxUintValue = 9999999999999999999
 
 	base = 10
 )
 
-func uintToString(sb *strings.Builder, n uint64) {
-	var digitRune rune
-
-	sbCap := sb.Cap()
-	sbLen := sb.Len()
-
-	for range uintSafeDigits {
-		if sbLen == sbCap {
-			return
-		}
-
-		switch n % base {
-		case 0:
-			digitRune = '0'
-		case 1:
-			digitRune = '1'
-		case 2:
-			digitRune = '2'
-		case 3:
-			digitRune = '3'
-		case 4:
-			digitRune = '4'
-		case 5:
-			digitRune = '5'
-		case 6:
-			digitRune = '6'
-		case 7:
-			digitRune = '7'
-		case 8:
-			digitRune = '8'
-		case 9:
-			digitRune = '9'
-		}
-
-		_, _ = sb.WriteRune(digitRune)
-
-		sbLen++
-		n /= base
-	}
+var digits = []string{
+	"0",
+	"1",
+	"2",
+	"3",
+	"4",
+	"5",
+	"6",
+	"7",
+	"8",
+	"9",
 }
 
-func UintsPerNumber(maxDigits int) int {
-	return maxDigits / uintSafeDigits
+var pow10 = []uint64{
+	1,
+	10,
+	100,
+	1000,
+	10000,
+	100000,
+	1000000,
+	10000000,
+	100000000,
+	1000000000,
+	10000000000,
+	100000000000,
+	1000000000000,
+	10000000000000,
+	100000000000000,
+	1000000000000000,
+	10000000000000000,
+	100000000000000000,
+	1000000000000000000,
+	10000000000000000000,
+}
+
+func normalizeUint(n uint64, maxDigits int) uint64 {
+	if maxDigits > maxDigitsPerUint {
+		panic("got maxDigits > maxDigitsPerUint")
+	}
+
+	return n % pow10[maxDigits]
+}
+
+func uintToString(n uint64) string {
+	var result string
+
+	for index := maxDigitsPerUint - 1; index >= 0; index-- {
+		result += digits[(n/pow10[index])%base]
+
+		n %= pow10[index]
+	}
+
+	return result
+}
+
+func uintsPerNumber(maxDigits int) int {
+	if maxDigits == 0 {
+		return 0
+	}
+
+	return ((maxDigits - 1) / maxDigitsPerUint) + 1
 }
