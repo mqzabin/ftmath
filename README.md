@@ -1,5 +1,3 @@
-## WIP: This repository is a work in progress.
-
 # fuzzdecimal - Fuzzy tests for arbitrary precision decimals
 
 Go 1.18 introduced [fuzzy testing](https://go.dev/doc/security/fuzz/), a way to test your code with "random" inputs. This is a great way to find bugs in your code.
@@ -148,6 +146,7 @@ func FuzzCommutativeAdd(f *testing.F) {
 	}
 
 	// Defining how to parse the reference decimal.
+	// If both decimals are the same type, you can use the same function (parseMyDecimal) for both `AsDecimalComparison2` parameters. 
 	parseReferenceDecimal := func(t *testing.T, s string) (shopspring.Decimal, error) {
 		t.Helper()
 

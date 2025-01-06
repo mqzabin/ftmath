@@ -49,8 +49,14 @@ func (cfg config) applyDecimalOption(f *testing.F, numberIndex int, options []De
 	}
 }
 
+// Option represents an option for the Fuzz function call. The available options are:
+//
+//   - WithDecimal(index int, options ...DecimalOption) Option
+//   - WithAllDecimals(options ...DecimalOption) Option
 type Option func(f *testing.F, cfg *config)
 
+// WithAllDecimals defines DecimalOptions for all generated decimal seed values.
+// Check DecimalOption for available sub-options.
 func WithAllDecimals(options ...DecimalOption) Option {
 	return func(f *testing.F, cfg *config) {
 		f.Helper()
@@ -61,6 +67,9 @@ func WithAllDecimals(options ...DecimalOption) Option {
 	}
 }
 
+// WithDecimal defines DecimalOptions for a specific decimal seed value at the provided index.
+// The index should be 1-indexes, i.e. the first seed is at index 1.
+// Check DecimalOption for available sub-options.
 func WithDecimal(index int, options ...DecimalOption) Option {
 	return func(f *testing.F, cfg *config) {
 		f.Helper()
