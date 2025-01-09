@@ -1,37 +1,16 @@
 package fuzzdecimal
 
-import (
-	"fmt"
-	"testing"
-)
+import "testing"
 
-func seedToStringFunc(f *testing.F, cfg config, handler func(t *testing.T, strNumbers []string)) func(t *testing.T, seeds []seed) {
-	f.Helper()
-
-	return func(t *testing.T, seeds []seed) {
-		t.Helper()
-
-		parsedNumbers := make([]string, 0, len(seeds))
-		for i, s := range seeds {
-			parsedNumbers = append(parsedNumbers, s.string(cfg.decimals[i]))
-		}
-
-		handler(t, parsedNumbers)
-	}
-}
-
-func parseStringSlice[N any](t *T, strNumbers []string, parseNumberFunc func(t *T, s string) (N, error)) ([]N, error) {
+func convertParseDecimalFunc[Decimal any](t *T, parseDecimalFunc func(t *T, s string) (Decimal, error)) func(t *testing.T, s string) (Decimal, error) {
 	t.Helper()
 
-	parsedNumbers := make([]N, 0, len(strNumbers))
-	for index, strNumber := range strNumbers {
-		parsedNumber, err := parseNumberFunc(t, strNumber)
-		if err != nil {
-			return nil, fmt.Errorf("failed to parse number string '%s' at index %d: %v", strNumber, index, err)
-		}
+	return func(testingT *testing.T, s string) (Decimal, error) {
+		testingT.Helper()
 
-		parsedNumbers = append(parsedNumbers, parsedNumber)
+		return parseDecimalFunc(&T{
+			T:     testingT,
+			seeds: t.seeds,
+		}, s)
 	}
-
-	return parsedNumbers, nil
 }

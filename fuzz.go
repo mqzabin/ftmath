@@ -2,6 +2,8 @@ package fuzzdecimal
 
 import (
 	"testing"
+
+	"github.com/mqzabin/fuzzdecimal/fdlib"
 )
 
 // Fuzz initializes the fuzzing with the given numbersCount, and should be called once for each Fuzz...(f *testing.F) function.
@@ -26,9 +28,9 @@ import (
 func Fuzz(f *testing.F, numbersCount int, fuzzFunc func(t *T), options ...Option) {
 	f.Helper()
 
-	cfg := parseFuzzerConfig(f, numbersCount, options)
+	cfg := parseConfig(f, numbersCount, options)
 
-	rvFunc := createSeedFunc(f, cfg, seedToStringFunc(f, cfg, func(t *testing.T, strNumbers []string) {
+	rvFunc := fdlib.CreateSeedFunc(f, cfg, fdlib.SeedsFuncToStringsFunc(f, cfg, func(t *testing.T, strNumbers []string) {
 		t.Helper()
 
 		fuzzFunc(&T{

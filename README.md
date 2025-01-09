@@ -22,7 +22,7 @@ You can define the maximum number of digits for the fuzzed decimals, and if they
 
 This package will work for any type of decimal that could be parsed from a string.
 
-## Usage
+## Public API usage
 
 Install as dependency into your project:
 
@@ -30,7 +30,9 @@ Install as dependency into your project:
 $ go get github.com/mqzabin/fuzzdecimal
 ```
 
-Then the used will vary according to the fuzzer you choose.
+Then, call `fuzzdecimal.Fuzz` to initialize the fuzzer in your `func Fuzz<Name>(f *testing.F)` function.
+
+To make assertions and access the generated decimals, you could provide the `*fuzzdecimal.T` to the functions groups presented in the examples below: `AsString`, `AsDecimal`, `AsDecimalComparison`.
 
 ### Fuzz `AsString`
 
@@ -52,8 +54,8 @@ func FuzzCommutativeAdd(f *testing.F) {
 	fuzzdecimal.Fuzz(f, 2, func(t *fuzzdecimal.T) {
 		// AsString2 is called to generate two decimal strings.
 		// If the number of parameters change to 3, AsString3 should be called instead.
-		// Also, AsStringSlice could be called to receive a slice of decimal strings.
-        fuzzdecimal.AsString2(t, "Commutative Add", func(x1, x2 string) {
+		// Also, AsStringSlice could be called to receive a slice of decimal strings. 
+		fuzzdecimal.AsString2(t, "Commutative Add", func(x1, x2 string) {
 			// Parsing the first string.
 			a, err := decimal.NewFromString(x1)
 			if err != nil {
@@ -69,9 +71,9 @@ func FuzzCommutativeAdd(f *testing.F) {
 			// Making the comparison.
 			if resAB, resBA := a.Add(b), b.Add(a); !resAB.Equal(resBA) {
 				t.Errorf("a + b != b + a, where a='%s', b='%s', a+b='%s' and b+a='%s'", a.String(), b.String(), resAB.String(), resBA.String())
-			}	
+			}
 		})
-    },fuzzdecimal.WithAllDecimals(
+    }, fuzzdecimal.WithAllDecimals(
         fuzzdecimal.WithSigned(),
         fuzzdecimal.WithMaxSignificantDigits(30),
         fuzzdecimal.WithDecimalPointAt(15),
@@ -177,3 +179,9 @@ func FuzzCommutativeAdd(f *testing.F) {
 	))
 }
 ```
+
+## Usage as library
+
+The `fuzzdecimal` packages wraps the `github.com/mqzabin/fuzzdecimal/fdlib` usage to provide an easy-to-use API.
+However, if the `fuzzdecimal` public API doesn't fit your needs, you can use the `fdlib` package directly to help you implement your own fuzzy functions API.
+

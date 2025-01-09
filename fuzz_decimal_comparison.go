@@ -1,5 +1,7 @@
 package fuzzdecimal
 
+import "github.com/mqzabin/fuzzdecimal/fdlib"
+
 const asDecimalComparisonFuncName = "AsDecimalComparison"
 
 func AsDecimalComparisonSlice[Decimal, ReferenceDecimal any](
@@ -11,20 +13,23 @@ func AsDecimalComparisonSlice[Decimal, ReferenceDecimal any](
 ) {
 	t.Helper()
 
+	parseDecimal := convertParseDecimalFunc(t, parseDecimalFunc)
+	parseReferenceDecimal := convertParseDecimalFunc(t, parseReferenceDecimalFunc)
+
 	t.Run(name, func(t *T) {
-		refDecimals, err := parseStringSlice(t, t.seeds, parseReferenceDecimalFunc)
+		refDecimals, err := fdlib.ParseStringSliceToDecimalSlice(t.T, t.seeds, parseReferenceDecimal)
 		if err != nil {
-			t.Errorf("failed to parse reference decimals: %v", err)
+			t.Fatalf("failed to parse reference decimals: %v", err)
 		}
 
 		refResult, err := computeReferenceResult(t, refDecimals)
 		if err != nil {
-			t.Errorf("failed to get reference result: %v: values:\n%s", err, t.seedsErrorMessage("\t"))
+			t.Fatalf("failed to get reference result: %v: values:\n%s", err, t.seedsErrorMessage("\t"))
 		}
 
-		decimals, err := parseStringSlice(t, t.seeds, parseDecimalFunc)
+		decimals, err := fdlib.ParseStringSliceToDecimalSlice(t.T, t.seeds, parseDecimal)
 		if err != nil {
-			t.Errorf("failed to parse decimals: %v", err)
+			t.Fatalf("failed to parse decimals: %v", err)
 		}
 
 		result := fuzzFunc(t, decimals)

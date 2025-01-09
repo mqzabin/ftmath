@@ -1,10 +1,10 @@
-package fuzzdecimal
+package fdlib
 
 import (
 	"testing"
 )
 
-func Test_uintsPerNumber(t *testing.T) {
+func TestUintsPerNumber(t *testing.T) {
 	t.Parallel()
 
 	testCases := []struct {
@@ -24,26 +24,26 @@ func Test_uintsPerNumber(t *testing.T) {
 		},
 		{
 			name:      "19 digits",
-			maxDigits: maxDigitsPerUint,
+			maxDigits: MaxDigitsPerUint,
 			want:      1,
 		},
 		{
 			name:      "20 digits",
-			maxDigits: maxDigitsPerUint + 1,
+			maxDigits: MaxDigitsPerUint + 1,
 			want:      2,
 		},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			if got := uintsPerNumber(tc.maxDigits); got != tc.want {
-				t.Errorf("uintsPerNumber() = %d, want %d", got, tc.want)
+			if got := UintsPerNumber(tc.maxDigits); got != tc.want {
+				t.Errorf("UintsPerNumber() = %d, want %d", got, tc.want)
 			}
 		})
 	}
 }
 
-func Test_normalizeUint(t *testing.T) {
+func TestNormalizeUint(t *testing.T) {
 	t.Parallel()
 
 	testCases := []struct {
@@ -53,15 +53,15 @@ func Test_normalizeUint(t *testing.T) {
 		want      uint64
 	}{
 		{
-			name:      "overflows maxDigitsPerUint digits",
+			name:      "overflows MaxDigitsPerUint digits",
 			n:         18446744073709551615, // math.MathUint64
-			maxDigits: maxDigitsPerUint,
+			maxDigits: MaxDigitsPerUint,
 			want:      8446744073709551615,
 		},
 		{
-			name:      "lower than maxDigitsPerUint digits",
+			name:      "lower than MaxDigitsPerUint digits",
 			n:         73709551615, // math.MathUint64
-			maxDigits: maxDigitsPerUint,
+			maxDigits: MaxDigitsPerUint,
 			want:      73709551615, // unchanged
 		},
 		{
@@ -80,14 +80,14 @@ func Test_normalizeUint(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			if got := normalizeUint(tc.n, tc.maxDigits); got != tc.want {
-				t.Errorf("normalizeUint() = %d, want %d", got, tc.want)
+			if got := NormalizeUint(t, tc.n, tc.maxDigits); got != tc.want {
+				t.Errorf("NormalizeUint() = %d, want %d", got, tc.want)
 			}
 		})
 	}
 }
 
-func Test_uintToString(t *testing.T) {
+func TestUintToString(t *testing.T) {
 	t.Parallel()
 
 	testCases := []struct {
@@ -109,8 +109,8 @@ func Test_uintToString(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			if got := uintToString(tc.n); got != tc.want {
-				t.Errorf("uintToString() = %s, want %s", got, tc.want)
+			if got := UintToString(tc.n); got != tc.want {
+				t.Errorf("UintToString() = %s, want %s", got, tc.want)
 			}
 		})
 	}

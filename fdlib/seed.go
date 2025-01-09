@@ -1,19 +1,20 @@
-package fuzzdecimal
+package fdlib
 
-type seed struct {
-	// uints stores all the uint64 used to represent the number.
+type Seed struct {
+	// Uints stores all the uint64 used to represent the number.
 	// The 0 index is the most significant digit.
-	uints []uint64
-	// neg stores the number's sign.
-	neg bool
+	Uints []uint64
+	// Neg stores the number's sign.
+	Neg bool
 }
 
-func (s seed) isZero() bool {
-	if len(s.uints) == 0 {
+// IsZero returns true if the seed represents the number 0.
+func (s Seed) IsZero() bool {
+	if len(s.Uints) == 0 {
 		return true
 	}
 
-	for _, digit := range s.uints {
+	for _, digit := range s.Uints {
 		if digit != 0 {
 			return false
 		}
@@ -22,28 +23,29 @@ func (s seed) isZero() bool {
 	return true
 }
 
-func (s seed) string(cfg decimalConfig) string {
-	if s.isZero() {
+// String returns the string representation of the seed, according to the provided DecimalConfig.
+func (s Seed) String(cfg DecimalConfig) string {
+	if s.IsZero() {
 		return "0"
 	}
 
 	var str string
 
-	for _, nUint := range s.uints {
-		str += uintToString(nUint)
+	for _, nUint := range s.Uints {
+		str += UintToString(nUint)
 	}
 
-	maxStrLen := uintsPerNumber(cfg.maxSignificantDigits) * maxDigitsPerUint
+	maxStrLen := UintsPerNumber(cfg.MaxSignificantDigits) * MaxDigitsPerUint
 
 	// Only write decimal point if it is within the number's length.
-	if cfg.decimalPointPosition > 0 && cfg.decimalPointPosition <= cfg.maxSignificantDigits {
-		decimalPointIndex := maxStrLen - cfg.decimalPointPosition
+	if cfg.DecimalPointPosition > 0 && cfg.DecimalPointPosition <= cfg.MaxSignificantDigits {
+		decimalPointIndex := maxStrLen - cfg.DecimalPointPosition
 		str = str[:decimalPointIndex] + "." + str[decimalPointIndex:]
 	}
 
 	str = trimInsignificantDigits(str)
 
-	if s.neg {
+	if s.Neg {
 		str = "-" + str
 	}
 

@@ -5,6 +5,7 @@ import (
 	"testing"
 )
 
+// T is a wrapper around testing.T that propagated the fuzzy seeds to the subtest called with Run.
 type T struct {
 	*testing.T
 
@@ -24,7 +25,7 @@ func (ft *T) Run(name string, f func(t *T)) {
 
 func (ft *T) assertStaticSeedsCount(expectedCount int, funcName string) {
 	if len(ft.seeds) != expectedCount {
-		ft.Errorf("calling %[1]s%[2]d with %[3]d seeds, please call %[1]s%[3]d instead", funcName, expectedCount, len(ft.seeds))
+		ft.Fatalf("calling %[1]s%[2]d with %[3]d seeds, please call %[1]s%[3]d instead", funcName, expectedCount, len(ft.seeds))
 	}
 }
 

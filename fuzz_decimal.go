@@ -1,14 +1,18 @@
 package fuzzdecimal
 
+import "github.com/mqzabin/fuzzdecimal/fdlib"
+
 const asDecimalFuncName = "AsDecimal"
 
 func AsDecimalSlice[Decimal any](t *T, name string, parseDecimalFunc func(t *T, s string) (Decimal, error), fuzzFunc func(t *T, numbers []Decimal)) {
 	t.Helper()
 
+	parseDecimal := convertParseDecimalFunc(t, parseDecimalFunc)
+
 	t.Run(name, func(t *T) {
-		decimals, err := parseStringSlice(t, t.seeds, parseDecimalFunc)
+		decimals, err := fdlib.ParseStringSliceToDecimalSlice(t.T, t.seeds, parseDecimal)
 		if err != nil {
-			t.Errorf("failed to parse decimals: %v", err)
+			t.Fatalf("failed to parse decimals: %v", err)
 		}
 
 		fuzzFunc(t, decimals)
