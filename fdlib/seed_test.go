@@ -171,7 +171,7 @@ func TestSeedString(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := tc.seed.String(tc.config)
+			got := tc.seed.String(t, tc.config)
 
 			if got != tc.want {
 				t.Errorf("Seed.String() = '%s', want '%s'", got, tc.want)

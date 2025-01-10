@@ -1,5 +1,15 @@
 package fdlib
 
+import (
+	"testing"
+)
+
+const (
+	negativeSignS = "-"
+	decimalPointS = "."
+	decimalPointR = '.'
+)
+
 type Seed struct {
 	// Uints stores all the uint64 used to represent the number.
 	// The 0 index is the most significant digit.
@@ -9,7 +19,9 @@ type Seed struct {
 }
 
 // IsZero returns true if the seed represents the number 0.
-func (s Seed) IsZero() bool {
+func (s Seed) IsZero(t *testing.T) bool {
+	t.Helper()
+
 	if len(s.Uints) == 0 {
 		return true
 	}
@@ -24,8 +36,10 @@ func (s Seed) IsZero() bool {
 }
 
 // String returns the string representation of the seed, according to the provided DecimalConfig.
-func (s Seed) String(cfg DecimalConfig) string {
-	if s.IsZero() {
+func (s Seed) String(t *testing.T, cfg DecimalConfig) string {
+	t.Helper()
+
+	if s.IsZero(t) {
 		return "0"
 	}
 
@@ -40,19 +54,21 @@ func (s Seed) String(cfg DecimalConfig) string {
 	// Only write decimal point if it is within the number's length.
 	if cfg.DecimalPointPosition > 0 && cfg.DecimalPointPosition <= cfg.MaxSignificantDigits {
 		decimalPointIndex := maxStrLen - cfg.DecimalPointPosition
-		str = str[:decimalPointIndex] + "." + str[decimalPointIndex:]
+		str = str[:decimalPointIndex] + decimalPointS + str[decimalPointIndex:]
 	}
 
-	str = trimInsignificantDigits(str)
+	str = trimInsignificantDigits(t, str)
 
 	if s.Neg {
-		str = "-" + str
+		str = negativeSignS + str
 	}
 
 	return str
 }
 
-func trimInsignificantDigits(str string) string {
+func trimInsignificantDigits(t *testing.T, str string) string {
+	t.Helper()
+
 	if len(str) == 0 {
 		return str
 	}
@@ -81,7 +97,7 @@ func trimInsignificantDigits(str string) string {
 
 	str = str[firstNonZeroIndex : lastNonZeroIndex+1]
 
-	if str[0] == '.' {
+	if str[0] == decimalPointR {
 		str = "0" + str
 	}
 

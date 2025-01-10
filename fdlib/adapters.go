@@ -14,7 +14,7 @@ func SeedsFuncToStringsFunc(f *testing.F, cfg Config, handler func(t *testing.T,
 
 		parsedNumbers := make([]string, 0, len(seeds))
 		for i, s := range seeds {
-			parsedNumbers = append(parsedNumbers, s.String(cfg.Decimals[i]))
+			parsedNumbers = append(parsedNumbers, s.String(t, cfg.Decimals[i]))
 		}
 
 		handler(t, parsedNumbers)
