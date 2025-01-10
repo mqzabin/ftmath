@@ -185,3 +185,15 @@ func FuzzCommutativeAdd(f *testing.F) {
 The `fuzzdecimal` packages wraps the `github.com/mqzabin/fuzzdecimal/fdlib` usage to provide an easy-to-use API.
 However, if the `fuzzdecimal` public API doesn't fit your needs, you can use the `fdlib` package directly to help you implement your own fuzzy functions API.
 
+## How to save fuzzy cache between different machines?
+
+There's a kinda "hidden" flag (from `go help test`) called `test.fuzzcachedir`, so if you set `-test.fuzzcachedir=testdata` in your `go test` call, the cache will be saved in the `testdata` directory inside your directory,
+and you can add it to your repository to save the fuzzy process between different machines.
+
+There are no guarantees that this flag will continue to work, since it's flagged as `for use only by go/cmd`:
+```
+    -test.fuzzcachedir string
+        directory where interesting fuzzing inputs are stored (for use only by cmd/go)
+```
+
+
