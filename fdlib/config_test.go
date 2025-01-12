@@ -118,3 +118,49 @@ func TestNewDecimalConfig(t *testing.T) {
 		})
 	}
 }
+
+func TestDecimalConfigValidate(t *testing.T) {
+	t.Parallel()
+
+	testCases := []struct {
+		name   string
+		config func(t *testing.T, f *testing.F) DecimalConfig
+	}{
+		{
+			name: "default value",
+			config: func(t *testing.T, f *testing.F) DecimalConfig {
+				return NewDecimalConfig(f)
+			},
+		},
+		{
+			name: "max significant digits greater than decimal point position",
+			config: func(t *testing.T, f *testing.F) DecimalConfig {
+				return DecimalConfig{
+					MaxSignificantDigits: 11,
+					Signed:               false,
+					DecimalPointPosition: 10,
+				}
+			},
+		},
+		{
+			name: "max significant digits equal to decimal point position",
+			config: func(t *testing.T, f *testing.F) DecimalConfig {
+				return DecimalConfig{
+					MaxSignificantDigits: 11,
+					Signed:               false,
+					DecimalPointPosition: 11,
+				}
+			},
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+
+			f := &testing.F{}
+
+			tc.config(t, f).Validate(f)
+		})
+	}
+}
