@@ -2,6 +2,110 @@ package fdlib
 
 import "testing"
 
+func TestSeedIsZero(t *testing.T) {
+	t.Parallel()
+
+	testCases := []struct {
+		name     string
+		seed     Seed
+		expected bool
+	}{
+		{
+			name: "positive nil uints",
+			seed: Seed{
+				Uints: nil,
+				Neg:   false,
+			},
+			expected: true,
+		},
+		{
+			name: "negative nil uints",
+			seed: Seed{
+				Uints: nil,
+				Neg:   true,
+			},
+			expected: true,
+		},
+
+		{
+			name: "positive multiple zero uints",
+			seed: Seed{
+				Uints: []uint64{0, 0, 0, 0},
+				Neg:   false,
+			},
+			expected: true,
+		},
+		{
+			name: "negative multiple zero uints",
+			seed: Seed{
+				Uints: []uint64{0, 0, 0, 0},
+				Neg:   true,
+			},
+			expected: true,
+		},
+		{
+			name: "1 on first uint, positive",
+			seed: Seed{
+				Uints: []uint64{1, 0, 0, 0},
+				Neg:   false,
+			},
+			expected: false,
+		},
+		{
+			name: "1 on first uint, negative",
+			seed: Seed{
+				Uints: []uint64{1, 0, 0, 0},
+				Neg:   true,
+			},
+			expected: false,
+		},
+		{
+			name: "1 on last uint, positive",
+			seed: Seed{
+				Uints: []uint64{0, 0, 0, 1},
+				Neg:   false,
+			},
+			expected: false,
+		},
+		{
+			name: "1 on last uint, negative",
+			seed: Seed{
+				Uints: []uint64{0, 0, 0, 1},
+				Neg:   true,
+			},
+			expected: false,
+		},
+		{
+			name: "1 on middle uint, positive",
+			seed: Seed{
+				Uints: []uint64{0, 1, 0, 0},
+				Neg:   false,
+			},
+			expected: false,
+		},
+		{
+			name: "1 on middle uint, negative",
+			seed: Seed{
+				Uints: []uint64{0, 1, 0, 0},
+				Neg:   true,
+			},
+			expected: false,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+
+			got := tc.seed.IsZero(t)
+
+			if got != tc.expected {
+				t.Errorf("Seed.IsZero() = %v, want %v", got, tc.expected)
+			}
+		})
+	}
+}
+
 func TestSeedString(t *testing.T) {
 	t.Parallel()
 
