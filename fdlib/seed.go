@@ -101,5 +101,9 @@ func trimInsignificantDigits(t *testing.T, str string) string {
 		str = "0" + str
 	}
 
+	if str[len(str)-1] == decimalPointR {
+		str = str[:len(str)-1]
+	}
+
 	return str
 }

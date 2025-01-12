@@ -271,6 +271,19 @@ func TestSeedString(t *testing.T) {
 			},
 			want: "0.000000000000000048",
 		},
+		{
+			name: "positive integer",
+			seed: Seed{
+				Uints: []uint64{0, 1, 0, 0},
+				Neg:   false,
+			},
+			config: DecimalConfig{
+				MaxSignificantDigits: 4 * MaxDigitsPerUint,
+				Signed:               true,
+				DecimalPointPosition: 10,
+			},
+			want: "10000000000000000000000000000",
+		},
 	}
 
 	for _, tc := range testCases {
