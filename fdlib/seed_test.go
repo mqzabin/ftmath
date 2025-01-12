@@ -124,7 +124,7 @@ func TestSeedString(t *testing.T) {
 			config: DecimalConfig{
 				MaxSignificantDigits: 30,
 				Signed:               true,
-				DecimalPointPosition: 15,
+				MaxDecimalPlaces:     15,
 			},
 			want: "0",
 		},
@@ -137,7 +137,7 @@ func TestSeedString(t *testing.T) {
 			config: DecimalConfig{
 				MaxSignificantDigits: 30,
 				Signed:               true,
-				DecimalPointPosition: 15,
+				MaxDecimalPlaces:     15,
 			},
 			want: "0",
 		},
@@ -150,7 +150,7 @@ func TestSeedString(t *testing.T) {
 			config: DecimalConfig{
 				MaxSignificantDigits: 30,
 				Signed:               true,
-				DecimalPointPosition: 15,
+				MaxDecimalPlaces:     15,
 			},
 			want: "0",
 		},
@@ -163,7 +163,7 @@ func TestSeedString(t *testing.T) {
 			config: DecimalConfig{
 				MaxSignificantDigits: 30,
 				Signed:               true,
-				DecimalPointPosition: 15,
+				MaxDecimalPlaces:     15,
 			},
 			want: "0",
 		},
@@ -176,7 +176,7 @@ func TestSeedString(t *testing.T) {
 			config: DecimalConfig{
 				MaxSignificantDigits: 30,
 				Signed:               true,
-				DecimalPointPosition: 0,
+				MaxDecimalPlaces:     0,
 			},
 			want: "9999999999999999999",
 		},
@@ -189,7 +189,7 @@ func TestSeedString(t *testing.T) {
 			config: DecimalConfig{
 				MaxSignificantDigits: 38,
 				Signed:               true,
-				DecimalPointPosition: 15,
+				MaxDecimalPlaces:     15,
 			},
 			want: "99999999999999999999999.999999999999999",
 		},
@@ -202,7 +202,7 @@ func TestSeedString(t *testing.T) {
 			config: DecimalConfig{
 				MaxSignificantDigits: 38,
 				Signed:               true,
-				DecimalPointPosition: 0,
+				MaxDecimalPlaces:     0,
 			},
 			want: "99999999999999999999999999999999999999",
 		},
@@ -215,7 +215,7 @@ func TestSeedString(t *testing.T) {
 			config: DecimalConfig{
 				MaxSignificantDigits: 38,
 				Signed:               true,
-				DecimalPointPosition: 38,
+				MaxDecimalPlaces:     38,
 			},
 			want: "0.99999999999999999999999999999999999999",
 		},
@@ -228,12 +228,12 @@ func TestSeedString(t *testing.T) {
 			config: DecimalConfig{
 				MaxSignificantDigits: 38,
 				Signed:               true,
-				DecimalPointPosition: 15,
+				MaxDecimalPlaces:     15,
 			},
 			want: "0.000000000000001",
 		},
 		{
-			name: "minimum non-zero with max decimal point position",
+			name: "minimum non-zero with max decimal places",
 			seed: Seed{
 				Uints: []uint64{0, 1},
 				Neg:   false,
@@ -241,12 +241,12 @@ func TestSeedString(t *testing.T) {
 			config: DecimalConfig{
 				MaxSignificantDigits: 38,
 				Signed:               true,
-				DecimalPointPosition: 38,
+				MaxDecimalPlaces:     38,
 			},
 			want: "0.00000000000000000000000000000000000001",
 		},
 		{
-			name: "negative minimum non-zero with max decimal point position",
+			name: "negative minimum non-zero with max decimal places",
 			seed: Seed{
 				Uints: []uint64{0, 1},
 				Neg:   true,
@@ -254,12 +254,12 @@ func TestSeedString(t *testing.T) {
 			config: DecimalConfig{
 				MaxSignificantDigits: 38,
 				Signed:               true,
-				DecimalPointPosition: 38,
+				MaxDecimalPlaces:     38,
 			},
 			want: "-0.00000000000000000000000000000000000001",
 		},
 		{
-			name: "negative minimum non-zero with max decimal point position",
+			name: "negative minimum non-zero with max decimal places",
 			seed: Seed{
 				Uints: []uint64{0, 0, 0, 48},
 				Neg:   false,
@@ -267,7 +267,7 @@ func TestSeedString(t *testing.T) {
 			config: DecimalConfig{
 				MaxSignificantDigits: 72,
 				Signed:               true,
-				DecimalPointPosition: 18,
+				MaxDecimalPlaces:     18,
 			},
 			want: "0.000000000000000048",
 		},
@@ -280,7 +280,7 @@ func TestSeedString(t *testing.T) {
 			config: DecimalConfig{
 				MaxSignificantDigits: 4 * MaxDigitsPerUint,
 				Signed:               true,
-				DecimalPointPosition: 10,
+				MaxDecimalPlaces:     10,
 			},
 			want: "10000000000000000000000000000",
 		},

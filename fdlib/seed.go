@@ -52,8 +52,8 @@ func (s Seed) String(t *testing.T, cfg DecimalConfig) string {
 	maxStrLen := UintsPerNumber(cfg.MaxSignificantDigits) * MaxDigitsPerUint
 
 	// Only write decimal point if it is within the number's length.
-	if cfg.DecimalPointPosition > 0 && cfg.DecimalPointPosition <= cfg.MaxSignificantDigits {
-		decimalPointIndex := maxStrLen - cfg.DecimalPointPosition
+	if cfg.MaxDecimalPlaces > 0 && cfg.MaxDecimalPlaces <= cfg.MaxSignificantDigits {
+		decimalPointIndex := maxStrLen - cfg.MaxDecimalPlaces
 		str = str[:decimalPointIndex] + decimalPointS + str[decimalPointIndex:]
 	}
 

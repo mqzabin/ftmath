@@ -22,12 +22,12 @@ func TestCreateSeedFunc(t *testing.T) {
 						{
 							MaxSignificantDigits: 10,
 							Signed:               true,
-							DecimalPointPosition: 0,
+							MaxDecimalPlaces:     0,
 						},
 						{
 							MaxSignificantDigits: 10,
 							Signed:               false,
-							DecimalPointPosition: 0,
+							MaxDecimalPlaces:     0,
 						},
 					},
 				}
@@ -109,7 +109,7 @@ func TestParseSeedFuncType(t *testing.T) {
 					{
 						MaxSignificantDigits: 0,
 						Signed:               false,
-						DecimalPointPosition: 0,
+						MaxDecimalPlaces:     0,
 					},
 				},
 			},
@@ -124,12 +124,12 @@ func TestParseSeedFuncType(t *testing.T) {
 					{
 						MaxSignificantDigits: 30, // 2 uints
 						Signed:               false,
-						DecimalPointPosition: 0, // irrelevant
+						MaxDecimalPlaces:     0, // irrelevant
 					},
 					{
 						MaxSignificantDigits: 30, // 2 uints
 						Signed:               false,
-						DecimalPointPosition: 0, // irrelevant
+						MaxDecimalPlaces:     0, // irrelevant
 					},
 				},
 			},
@@ -148,12 +148,12 @@ func TestParseSeedFuncType(t *testing.T) {
 					{
 						MaxSignificantDigits: 30, // 2 uints
 						Signed:               true,
-						DecimalPointPosition: 0, // irrelevant
+						MaxDecimalPlaces:     0, // irrelevant
 					},
 					{
 						MaxSignificantDigits: 30, // 2 uints
 						Signed:               true,
-						DecimalPointPosition: 0, // irrelevant
+						MaxDecimalPlaces:     0, // irrelevant
 					},
 				},
 			},
@@ -176,17 +176,17 @@ func TestParseSeedFuncType(t *testing.T) {
 					{
 						MaxSignificantDigits: 10, // 1 uints
 						Signed:               true,
-						DecimalPointPosition: 0, // irrelevant
+						MaxDecimalPlaces:     0, // irrelevant
 					},
 					{
 						MaxSignificantDigits: 2 * MaxDigitsPerUint, // 2 uints
 						Signed:               false,
-						DecimalPointPosition: 0, // irrelevant
+						MaxDecimalPlaces:     0, // irrelevant
 					},
 					{
 						MaxSignificantDigits: 50, // 3 uints
 						Signed:               true,
-						DecimalPointPosition: 0, // irrelevant
+						MaxDecimalPlaces:     0, // irrelevant
 					},
 				},
 			},

@@ -3,9 +3,9 @@ package fdlib
 import "testing"
 
 const (
-	DefaultDecimalMaxDigits     = 10
-	DefaultDecimalSigned        = true
-	DefaultDecimalPointPosition = 2
+	DefaultDecimalMaxSignificantDigits = 10
+	DefaultDecimalSigned               = true
+	DefaultDecimalMaxDecimalPlaces     = 2
 )
 
 type Config struct {
@@ -33,16 +33,16 @@ func NewConfig(f *testing.F, decimalsCount int) Config {
 type DecimalConfig struct {
 	MaxSignificantDigits int
 	Signed               bool
-	DecimalPointPosition int
+	MaxDecimalPlaces     int
 }
 
 func NewDecimalConfig(f *testing.F) DecimalConfig {
 	f.Helper()
 
 	return DecimalConfig{
-		MaxSignificantDigits: DefaultDecimalMaxDigits,
+		MaxSignificantDigits: DefaultDecimalMaxSignificantDigits,
 		Signed:               DefaultDecimalSigned,
-		DecimalPointPosition: DefaultDecimalPointPosition,
+		MaxDecimalPlaces:     DefaultDecimalMaxDecimalPlaces,
 	}
 }
 
@@ -51,7 +51,7 @@ func NewDecimalConfig(f *testing.F) DecimalConfig {
 func (cfg DecimalConfig) Validate(f *testing.F) {
 	f.Helper()
 
-	if cfg.MaxSignificantDigits < cfg.DecimalPointPosition {
-		f.Fatalf("decimal point position %d cannot be greater than max significant digits %d", cfg.DecimalPointPosition, cfg.MaxSignificantDigits)
+	if cfg.MaxSignificantDigits < cfg.MaxDecimalPlaces {
+		f.Fatalf("max decimal places %d cannot be greater than max significant digits %d", cfg.MaxDecimalPlaces, cfg.MaxSignificantDigits)
 	}
 }

@@ -16,9 +16,9 @@ func TestNewConfig(t *testing.T) {
 			expected: Config{
 				Decimals: []DecimalConfig{
 					{
-						MaxSignificantDigits: DefaultDecimalMaxDigits,
+						MaxSignificantDigits: DefaultDecimalMaxSignificantDigits,
 						Signed:               DefaultDecimalSigned,
-						DecimalPointPosition: DefaultDecimalPointPosition,
+						MaxDecimalPlaces:     DefaultDecimalMaxDecimalPlaces,
 					},
 				},
 			},
@@ -29,19 +29,19 @@ func TestNewConfig(t *testing.T) {
 			expected: Config{
 				Decimals: []DecimalConfig{
 					{
-						MaxSignificantDigits: DefaultDecimalMaxDigits,
+						MaxSignificantDigits: DefaultDecimalMaxSignificantDigits,
 						Signed:               DefaultDecimalSigned,
-						DecimalPointPosition: DefaultDecimalPointPosition,
+						MaxDecimalPlaces:     DefaultDecimalMaxDecimalPlaces,
 					},
 					{
-						MaxSignificantDigits: DefaultDecimalMaxDigits,
+						MaxSignificantDigits: DefaultDecimalMaxSignificantDigits,
 						Signed:               DefaultDecimalSigned,
-						DecimalPointPosition: DefaultDecimalPointPosition,
+						MaxDecimalPlaces:     DefaultDecimalMaxDecimalPlaces,
 					},
 					{
-						MaxSignificantDigits: DefaultDecimalMaxDigits,
+						MaxSignificantDigits: DefaultDecimalMaxSignificantDigits,
 						Signed:               DefaultDecimalSigned,
-						DecimalPointPosition: DefaultDecimalPointPosition,
+						MaxDecimalPlaces:     DefaultDecimalMaxDecimalPlaces,
 					},
 				},
 			},
@@ -63,8 +63,8 @@ func TestNewConfig(t *testing.T) {
 			for i := range gotCfg.Decimals {
 				want, got := tc.expected.Decimals[i], gotCfg.Decimals[i]
 
-				if got.DecimalPointPosition != want.DecimalPointPosition {
-					t.Errorf("Expected DecimalPointPosition to be %d, got %d, at index %d", want.DecimalPointPosition, got.DecimalPointPosition, i)
+				if got.MaxDecimalPlaces != want.MaxDecimalPlaces {
+					t.Errorf("Expected MaxDecimalPlaces to be %d, got %d, at index %d", want.MaxDecimalPlaces, got.MaxDecimalPlaces, i)
 				}
 
 				if got.MaxSignificantDigits != want.MaxSignificantDigits {
@@ -86,13 +86,13 @@ func TestNewDecimalConfig(t *testing.T) {
 		name                         string
 		expectedMaxSignificantDigits int
 		expectedSigned               bool
-		expectedDecimalPointPosition int
+		expectedMaxDecimalPlaces     int
 	}{
 		{
 			name:                         "default value",
-			expectedMaxSignificantDigits: DefaultDecimalMaxDigits,
+			expectedMaxSignificantDigits: DefaultDecimalMaxSignificantDigits,
 			expectedSigned:               DefaultDecimalSigned,
-			expectedDecimalPointPosition: DefaultDecimalPointPosition,
+			expectedMaxDecimalPlaces:     DefaultDecimalMaxDecimalPlaces,
 		},
 	}
 
@@ -104,8 +104,8 @@ func TestNewDecimalConfig(t *testing.T) {
 
 			gotCfg := NewDecimalConfig(f)
 
-			if gotCfg.DecimalPointPosition != tc.expectedDecimalPointPosition {
-				t.Errorf("Expected DecimalPointPosition to be %d, got %d", tc.expectedDecimalPointPosition, gotCfg.DecimalPointPosition)
+			if gotCfg.MaxDecimalPlaces != tc.expectedMaxDecimalPlaces {
+				t.Errorf("Expected MaxDecimalPlaces to be %d, got %d", tc.expectedMaxDecimalPlaces, gotCfg.MaxDecimalPlaces)
 			}
 
 			if gotCfg.MaxSignificantDigits != tc.expectedMaxSignificantDigits {
@@ -133,22 +133,22 @@ func TestDecimalConfigValidate(t *testing.T) {
 			},
 		},
 		{
-			name: "max significant digits greater than decimal point position",
+			name: "max significant digits greater than max decimal places",
 			config: func(t *testing.T, f *testing.F) DecimalConfig {
 				return DecimalConfig{
 					MaxSignificantDigits: 11,
 					Signed:               false,
-					DecimalPointPosition: 10,
+					MaxDecimalPlaces:     10,
 				}
 			},
 		},
 		{
-			name: "max significant digits equal to decimal point position",
+			name: "max significant digits equal to max decimal places",
 			config: func(t *testing.T, f *testing.F) DecimalConfig {
 				return DecimalConfig{
 					MaxSignificantDigits: 11,
 					Signed:               false,
-					DecimalPointPosition: 11,
+					MaxDecimalPlaces:     11,
 				}
 			},
 		},

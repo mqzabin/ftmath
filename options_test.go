@@ -22,19 +22,19 @@ func TestOptions(t *testing.T) {
 			expectedConfig: fdlib.Config{
 				Decimals: []fdlib.DecimalConfig{
 					{
-						MaxSignificantDigits: fdlib.DefaultDecimalMaxDigits,
+						MaxSignificantDigits: fdlib.DefaultDecimalMaxSignificantDigits,
 						Signed:               fdlib.DefaultDecimalSigned,
-						DecimalPointPosition: fdlib.DefaultDecimalPointPosition,
+						MaxDecimalPlaces:     fdlib.DefaultDecimalMaxDecimalPlaces,
 					},
 					{
-						MaxSignificantDigits: fdlib.DefaultDecimalMaxDigits,
+						MaxSignificantDigits: fdlib.DefaultDecimalMaxSignificantDigits,
 						Signed:               fdlib.DefaultDecimalSigned,
-						DecimalPointPosition: fdlib.DefaultDecimalPointPosition,
+						MaxDecimalPlaces:     fdlib.DefaultDecimalMaxDecimalPlaces,
 					},
 					{
-						MaxSignificantDigits: fdlib.DefaultDecimalMaxDigits,
+						MaxSignificantDigits: fdlib.DefaultDecimalMaxSignificantDigits,
 						Signed:               fdlib.DefaultDecimalSigned,
-						DecimalPointPosition: fdlib.DefaultDecimalPointPosition,
+						MaxDecimalPlaces:     fdlib.DefaultDecimalMaxDecimalPlaces,
 					},
 				},
 			},
@@ -43,25 +43,25 @@ func TestOptions(t *testing.T) {
 			name:          "options for indexed decimals",
 			decimalsCount: 3,
 			options: []Option{
-				WithDecimal(1, WithMaxSignificantDigits(20), WithDecimalPointAt(10), WithSigned()),
-				WithDecimal(3, WithMaxSignificantDigits(5), WithDecimalPointAt(1), WithUnsigned()),
+				WithDecimal(1, WithMaxSignificantDigits(20), WithMaxDecimalPlaces(10), WithSigned()),
+				WithDecimal(3, WithMaxSignificantDigits(5), WithMaxDecimalPlaces(1), WithUnsigned()),
 			},
 			expectedConfig: fdlib.Config{
 				Decimals: []fdlib.DecimalConfig{
 					{
 						MaxSignificantDigits: 20,
 						Signed:               true,
-						DecimalPointPosition: 10,
+						MaxDecimalPlaces:     10,
 					},
 					{
-						MaxSignificantDigits: fdlib.DefaultDecimalMaxDigits,
+						MaxSignificantDigits: fdlib.DefaultDecimalMaxSignificantDigits,
 						Signed:               fdlib.DefaultDecimalSigned,
-						DecimalPointPosition: fdlib.DefaultDecimalPointPosition,
+						MaxDecimalPlaces:     fdlib.DefaultDecimalMaxDecimalPlaces,
 					},
 					{
 						MaxSignificantDigits: 5,
 						Signed:               false,
-						DecimalPointPosition: 1,
+						MaxDecimalPlaces:     1,
 					},
 				},
 			},
@@ -70,8 +70,8 @@ func TestOptions(t *testing.T) {
 			name:          "options for indexed decimals with indexed overrides",
 			decimalsCount: 3,
 			options: []Option{
-				WithDecimal(1, WithMaxSignificantDigits(20), WithDecimalPointAt(10), WithSigned()),
-				WithDecimal(3, WithMaxSignificantDigits(5), WithDecimalPointAt(1), WithUnsigned()),
+				WithDecimal(1, WithMaxSignificantDigits(20), WithMaxDecimalPlaces(10), WithSigned()),
+				WithDecimal(3, WithMaxSignificantDigits(5), WithMaxDecimalPlaces(1), WithUnsigned()),
 				WithDecimal(3, WithSigned()),
 			},
 			expectedConfig: fdlib.Config{
@@ -79,17 +79,17 @@ func TestOptions(t *testing.T) {
 					{
 						MaxSignificantDigits: 20,
 						Signed:               true,
-						DecimalPointPosition: 10,
+						MaxDecimalPlaces:     10,
 					},
 					{
-						MaxSignificantDigits: fdlib.DefaultDecimalMaxDigits,
+						MaxSignificantDigits: fdlib.DefaultDecimalMaxSignificantDigits,
 						Signed:               fdlib.DefaultDecimalSigned,
-						DecimalPointPosition: fdlib.DefaultDecimalPointPosition,
+						MaxDecimalPlaces:     fdlib.DefaultDecimalMaxDecimalPlaces,
 					},
 					{
 						MaxSignificantDigits: 5,
 						Signed:               true,
-						DecimalPointPosition: 1,
+						MaxDecimalPlaces:     1,
 					},
 				},
 			},
@@ -98,24 +98,24 @@ func TestOptions(t *testing.T) {
 			name:          "global decimal options",
 			decimalsCount: 3,
 			options: []Option{
-				WithAllDecimals(WithMaxSignificantDigits(20), WithDecimalPointAt(10), WithUnsigned()),
+				WithAllDecimals(WithMaxSignificantDigits(20), WithMaxDecimalPlaces(10), WithUnsigned()),
 			},
 			expectedConfig: fdlib.Config{
 				Decimals: []fdlib.DecimalConfig{
 					{
 						MaxSignificantDigits: 20,
 						Signed:               false,
-						DecimalPointPosition: 10,
+						MaxDecimalPlaces:     10,
 					},
 					{
 						MaxSignificantDigits: 20,
 						Signed:               false,
-						DecimalPointPosition: 10,
+						MaxDecimalPlaces:     10,
 					},
 					{
 						MaxSignificantDigits: 20,
 						Signed:               false,
-						DecimalPointPosition: 10,
+						MaxDecimalPlaces:     10,
 					},
 				},
 			},
@@ -124,7 +124,7 @@ func TestOptions(t *testing.T) {
 			name:          "global decimals options with global overrides",
 			decimalsCount: 3,
 			options: []Option{
-				WithAllDecimals(WithMaxSignificantDigits(20), WithDecimalPointAt(10), WithUnsigned()),
+				WithAllDecimals(WithMaxSignificantDigits(20), WithMaxDecimalPlaces(10), WithUnsigned()),
 				WithAllDecimals(WithSigned()),
 			},
 			expectedConfig: fdlib.Config{
@@ -132,17 +132,17 @@ func TestOptions(t *testing.T) {
 					{
 						MaxSignificantDigits: 20,
 						Signed:               true,
-						DecimalPointPosition: 10,
+						MaxDecimalPlaces:     10,
 					},
 					{
 						MaxSignificantDigits: 20,
 						Signed:               true,
-						DecimalPointPosition: 10,
+						MaxDecimalPlaces:     10,
 					},
 					{
 						MaxSignificantDigits: 20,
 						Signed:               true,
-						DecimalPointPosition: 10,
+						MaxDecimalPlaces:     10,
 					},
 				},
 			},
@@ -151,7 +151,7 @@ func TestOptions(t *testing.T) {
 			name:          "global options with indexed overrides",
 			decimalsCount: 3,
 			options: []Option{
-				WithAllDecimals(WithMaxSignificantDigits(20), WithDecimalPointAt(10), WithUnsigned()),
+				WithAllDecimals(WithMaxSignificantDigits(20), WithMaxDecimalPlaces(10), WithUnsigned()),
 				WithDecimal(2, WithSigned()),
 			},
 			expectedConfig: fdlib.Config{
@@ -159,17 +159,17 @@ func TestOptions(t *testing.T) {
 					{
 						MaxSignificantDigits: 20,
 						Signed:               false,
-						DecimalPointPosition: 10,
+						MaxDecimalPlaces:     10,
 					},
 					{
 						MaxSignificantDigits: 20,
 						Signed:               true,
-						DecimalPointPosition: 10,
+						MaxDecimalPlaces:     10,
 					},
 					{
 						MaxSignificantDigits: 20,
 						Signed:               false,
-						DecimalPointPosition: 10,
+						MaxDecimalPlaces:     10,
 					},
 				},
 			},
@@ -191,8 +191,8 @@ func TestOptions(t *testing.T) {
 			for i := range gotCfg.Decimals {
 				want, got := tc.expectedConfig.Decimals[i], gotCfg.Decimals[i]
 
-				if gotCfg.Decimals[i].DecimalPointPosition != want.DecimalPointPosition {
-					t.Errorf("Expected DecimalPointPosition to be %d, got %d, at index %d", want.DecimalPointPosition, got.DecimalPointPosition, i)
+				if gotCfg.Decimals[i].MaxDecimalPlaces != want.MaxDecimalPlaces {
+					t.Errorf("Expected MaxDecimalPlaces to be %d, got %d, at index %d", want.MaxDecimalPlaces, got.MaxDecimalPlaces, i)
 				}
 
 				if got.MaxSignificantDigits != want.MaxSignificantDigits {

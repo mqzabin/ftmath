@@ -52,7 +52,7 @@ func TestSeedsFuncToStringsFunc(t *testing.T) {
 				decCfg := DecimalConfig{
 					MaxSignificantDigits: MaxDigitsPerUint * 4,
 					Signed:               true,
-					DecimalPointPosition: 10,
+					MaxDecimalPlaces:     10,
 				}
 
 				return Config{

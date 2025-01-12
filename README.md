@@ -76,7 +76,7 @@ func FuzzCommutativeAdd(f *testing.F) {
 	}, fuzzdecimal.WithAllDecimals(
 		fuzzdecimal.WithSigned(),
 		fuzzdecimal.WithMaxSignificantDigits(30),
-		fuzzdecimal.WithDecimalPointAt(15),
+		fuzzdecimal.WithMaxDecimalPlaces(15),
 	))
 }
 ```
@@ -117,7 +117,7 @@ func FuzzCommutativeAdd(f *testing.F) {
 	}, fuzzdecimal.WithAllDecimals(
 		fuzzdecimal.WithSigned(),
 		fuzzdecimal.WithMaxSignificantDigits(30),
-		fuzzdecimal.WithDecimalPointAt(15),
+		fuzzdecimal.WithMaxDecimalPlaces(15),
 	))
 }
 ```
@@ -175,7 +175,7 @@ func FuzzCommutativeAdd(f *testing.F) {
 	}, fuzzdecimal.WithAllDecimals(
 		fuzzdecimal.WithSigned(),
 		fuzzdecimal.WithMaxSignificantDigits(30),
-		fuzzdecimal.WithDecimalPointAt(15),
+		fuzzdecimal.WithMaxDecimalPlaces(15),
 	))
 }
 ```

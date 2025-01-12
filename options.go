@@ -104,20 +104,19 @@ func WithUnsigned() DecimalOption {
 	}
 }
 
-// WithDecimalPointAt defines where the decimal point should be placed in relation to the
-// provided value to WithMaxSignificantDigits.
+// WithMaxDecimalPlaces defines the max after decimal point digits.
 //
-// For example: If you call WithMaxSignificantDigits(10) and WithDecimalPointAt(2),
+// For example: If you call WithMaxSignificantDigits(10) and WithMaxDecimalPlaces(2),
 // you could receive values like: '99999999.99', '9.9', '9',
 // but never values like '9.999' or '9999999999'.
-func WithDecimalPointAt(position uint) DecimalOption {
+func WithMaxDecimalPlaces(places uint) DecimalOption {
 	return func(f *testing.F, cfg *fdlib.DecimalConfig) {
 		f.Helper()
 
-		if position <= 0 {
-			f.Fatalf("decimal point position must be greater than zero, received %d", position)
+		if places < 0 {
+			f.Fatalf("max decimal places must be greater than zero, received %d", places)
 		}
 
-		cfg.DecimalPointPosition = int(position)
+		cfg.MaxDecimalPlaces = int(places)
 	}
 }
