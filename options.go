@@ -82,7 +82,6 @@ func WithMaxSignificantDigits(maxDigits int) DecimalOption {
 			f.Fatalf("max significant digits must be greater than zero, received %d", maxDigits)
 		}
 
-		cfg.Signed = false
 		cfg.MaxSignificantDigits = maxDigits
 	}
 }
@@ -101,7 +100,7 @@ func WithUnsigned() DecimalOption {
 	return func(f *testing.F, cfg *fdlib.DecimalConfig) {
 		f.Helper()
 
-		cfg.Signed = true
+		cfg.Signed = false
 	}
 }
 
