@@ -39,5 +39,5 @@ func Fuzz(f *testing.F, numbersCount int, fuzzFunc func(t *T), options ...Option
 		})
 	}))
 
-	f.Fuzz(rvFunc.Interface())
+	f.Fuzz(rvFunc)
 }
