@@ -43,9 +43,9 @@ package app_test
 
 import (
 	"testing"
-	
-	"github.com/shopspring/decimal"
+
 	"github.com/mqzabin/fuzzdecimal"
+	"github.com/shopspring/decimal"
 )
 
 func FuzzCommutativeAdd(f *testing.F) {
@@ -73,26 +73,26 @@ func FuzzCommutativeAdd(f *testing.F) {
 				t.Errorf("a + b != b + a, where a='%s', b='%s', a+b='%s' and b+a='%s'", a.String(), b.String(), resAB.String(), resBA.String())
 			}
 		})
-    }, fuzzdecimal.WithAllDecimals(
-        fuzzdecimal.WithSigned(),
-        fuzzdecimal.WithMaxSignificantDigits(30),
-        fuzzdecimal.WithDecimalPointAt(15),
-    ))
+	}, fuzzdecimal.WithAllDecimals(
+		fuzzdecimal.WithSigned(),
+		fuzzdecimal.WithMaxSignificantDigits(30),
+		fuzzdecimal.WithDecimalPointAt(15),
+	))
 }
 ```
 
 ### Fuzz `AsDecimal`
 
-This fuzzer is easier than `AsString`, because you only have to implement the desired comparisons. 
+This fuzzer is easier than `AsString`, because you only have to implement the desired comparisons.
 
 ```go
 package app_test
 
 import (
 	"testing"
-	
-	"github.com/shopspring/decimal"
+
 	"github.com/mqzabin/fuzzdecimal"
+	"github.com/shopspring/decimal"
 )
 
 func FuzzCommutativeAdd(f *testing.F) {
@@ -114,7 +114,7 @@ func FuzzCommutativeAdd(f *testing.F) {
 				t.Errorf("x1 + x2 != x2 + x1, where x1='%s', x2='%s', x1+x2='%s' and x2+x1='%s'", x1.String(), x2.String(), res12.String(), res21.String())
 			}
 		})
-	},fuzzdecimal.WithAllDecimals(
+	}, fuzzdecimal.WithAllDecimals(
 		fuzzdecimal.WithSigned(),
 		fuzzdecimal.WithMaxSignificantDigits(30),
 		fuzzdecimal.WithDecimalPointAt(15),
@@ -134,9 +134,9 @@ package app_test
 import (
 	"testing"
 
-	shopspring "github.com/shopspring/decimal"
-	"github.com/mqzabin/somedecimal"
 	"github.com/mqzabin/fuzzdecimal"
+	"github.com/mqzabin/somedecimal"
+	shopspring "github.com/shopspring/decimal"
 )
 
 func FuzzCommutativeAdd(f *testing.F) {
@@ -168,7 +168,7 @@ func FuzzCommutativeAdd(f *testing.F) {
 				return x1.Add(x2).String(), nil
 			},
 			// The second functions defines how your package computes the result with your chosen Decimal type.
-			func(t *fuzzdecimal.T,x1, x2 somedecimal.Decimal) string {
+			func(t *fuzzdecimal.T, x1, x2 somedecimal.Decimal) string {
 				return x1.Add(x2).String()
 			},
 		)
