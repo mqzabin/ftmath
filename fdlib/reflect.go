@@ -15,12 +15,12 @@ var (
 )
 
 // CreateSeedFunc creates a reflect.Value of a function that takes a *testing.T and a series of Seeds, according to the provided Config.
-func CreateSeedFunc(f *testing.F, cfg Config, seedHandler func(*testing.T, []Seed)) reflect.Value {
+func CreateSeedFunc(f *testing.F, cfg Config, seedHandler func(t *testing.T, seeds []Seed)) any {
 	f.Helper()
 
 	signature := ParseSeedFuncType(f, cfg)
 
-	return reflect.MakeFunc(signature, func(args []reflect.Value) []reflect.Value {
+	rvFunc := reflect.MakeFunc(signature, func(args []reflect.Value) []reflect.Value {
 		testingT, ok := args[0].Interface().(*testing.T)
 		if !ok {
 			f.Errorf("first argument must be *testing.TestingT")
@@ -72,6 +72,8 @@ func CreateSeedFunc(f *testing.F, cfg Config, seedHandler func(*testing.T, []See
 
 		return nil
 	})
+
+	return rvFunc.Interface()
 }
 
 // ParseSeedFuncType creates a reflect.Type of a function that takes a *testing.T and a series of arguments according to the provided Config.
